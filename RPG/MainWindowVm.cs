@@ -64,7 +64,6 @@ namespace RPG
         void ExecuteAttack()
         {
             SelectedEnemy.Hp -= 10;
-            NotifyPropertyChanged(nameof(Enemies));
         }
 
         #endregion
@@ -100,7 +99,16 @@ namespace RPG
     {
         #region 敵キャラの各パラメーター
 
-        public int Hp { get; set; }
+        public int Hp
+        {
+            get => _hp;
+            set
+            {
+                _hp = value;
+                NotifyPropertyChanged(nameof(Hp));
+            }
+        }
+        private int _hp;
 
         public int Atc { get; set; }
 
