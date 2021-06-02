@@ -1,0 +1,125 @@
+﻿<Window x:Class="RPG.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RPG"
+        xmlns:materialdesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        ContentRendered="Window_ContentRendered">
+
+    <Window.Resources>
+        <ResourceDictionary>
+        </ResourceDictionary>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <!--地上-->
+        <Grid Grid.Row="0" Background="LightSkyBlue" >
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 0" >
+                
+                <!--ステータス-->
+                <GroupBox Header="ステータス" Width="200" Height="180" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"
+                      materialdesign:ColorZoneAssist.Mode="Dark">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="HP" Style="{StaticResource MaterialDesignSubtitle2TextBlock}" />
+                            <TextBlock Text="180 / 200" Margin="10 0" Style="{StaticResource MaterialDesignBody2TextBlock}" />
+                        </StackPanel>
+                        <ProgressBar Height="15" Value="180" Maximum="200" Foreground="Green" Background="Transparent" BorderBrush="Black" />
+                        <TextBlock Text="" />
+                        <TextBlock Text="EXP" Style="{StaticResource MaterialDesignSubtitle2TextBlock}" />
+                    </StackPanel>
+                </GroupBox>
+
+                <!--コマンド-->
+                <GroupBox Header="コマンド" Width="150" Height="200" Margin="5" >
+                    <StackPanel Orientation="Vertical">
+                        <RadioButton Content="たたかう" Style="{StaticResource MaterialDesignTabRadioButton}" BorderBrush="Red"
+                                     IsChecked="{Binding IsCheckedAttackCommand}"/>
+                        <RadioButton Content="ぼうぎょ" Style="{StaticResource MaterialDesignTabRadioButton}" BorderBrush="Blue" />
+                        <RadioButton Content="なんかする" Style="{StaticResource MaterialDesignTabRadioButton}" BorderBrush="Aqua" />
+                    </StackPanel>
+                </GroupBox>
+                
+                <!--ターゲット選択-->
+                <GroupBox Header="ターゲット選択" Width="200" Height="200" Margin="5" Visibility="{Binding IsVisibilityTargetSelectBox}" >
+                    <DataGrid Background="Transparent" AutoGenerateColumns="False" IsReadOnly="True"
+                              ItemsSource="{Binding Enemies}" SelectedItem="{Binding SelectedEnemy}" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="HP" Binding="{Binding Hp}" CanUserSort="False" />
+                            <DataGridTextColumn Header="攻撃" Binding="{Binding Atc}" CanUserSort="False" />
+                            <DataGridTextColumn Header="防御" Binding="{Binding Def}" CanUserSort="False" />
+                        </DataGrid.Columns>
+                        
+                    </DataGrid>
+
+                    <GroupBox.InputBindings>
+                        <KeyBinding Gesture="Space" Command="{Binding AttackCommand}" />
+                    </GroupBox.InputBindings>
+                </GroupBox>
+                
+            </StackPanel>
+            
+            
+            <!--プレイヤー-->
+            <Grid Width="128" Height="128" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                
+                <materialdesign:PackIcon Kind="HumanHandsdown" Grid.RowSpan="2" Grid.ColumnSpan="2" Width="auto" Height="auto" />
+                <materialdesign:PackIcon Kind="Sword" Grid.Row="0" Grid.Column="0" Width="auto" Height="auto" Foreground="Black" />
+            </Grid>
+
+            <!--敵-->
+            <DataGrid HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                      Background="Transparent" HeadersVisibility="None" AutoGenerateColumns="False" CanUserAddRows="False"
+                      ItemsSource="{Binding Enemies}" SelectedItem="{Binding SelectedEnemy}">
+                <DataGrid.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </DataGrid.ItemsPanel>
+                
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <materialdesign:PackIcon Kind="{Binding EnemyShape}" Width="64" Height="64" Margin="0 0" Foreground="{Binding EnemyColor}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+                
+            </DataGrid>
+            <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                <materialdesign:PackIcon Kind="Bacteria" Width="64" Height="64" Margin="10 0" 
+                                         Foreground="Red"/>
+                <materialdesign:PackIcon Kind="Blinky" Width="64" Height="64" Margin="10 0"
+                                         Foreground="Green"/>
+                <materialdesign:PackIcon Kind="Bug" Width="64" Height="64" Margin="10 0" Visibility="Visible"
+                                         Foreground="Blue"/>
+
+            </StackPanel>-->
+            
+        </Grid>
+
+        <!--地面-->
+        <Grid Grid.Row="1" Background="SaddleBrown" >
+        </Grid>
+        
+    </Grid>
+</Window>
