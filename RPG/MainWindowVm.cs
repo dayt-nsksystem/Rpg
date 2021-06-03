@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Media;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,40 +15,48 @@ using System.ComponentModel;
 
 namespace RPG
 {
-    public class MainWindowVm : NotifyValidatableObject //BindableBase
+    public class MainWindowVm : BindableBase
     {
         #region プロパティ
-
+        
         /// <summary>
         /// 攻撃コマンドが選択されているか
         /// </summary>
         public bool IsCheckedAttackCommand
         {
             get => _isCheckedAttackCommand;
-            set //=> SetProperty(ref _isCheckedAttackCommand, value, nameof(IsVisibilityTargetSelectBox));
-            {
-                _isCheckedAttackCommand = value;
-                NotifyPropertyChanged(nameof(IsVisibilityTargetSelectBox));
-            }
+            set => SetProperty(ref _isCheckedAttackCommand, value, nameof(IsVisibilityTargetSelectBox));
+            // 第3引数を指定すると、nameofで指定したプロパティも同時に通知してくれる
+            // 通知したいプロパティが大量にあるときは RaisePropertyChanged(nameof(なんか通知したいやつ)); で通知することができる
         }
         private bool _isCheckedAttackCommand = true;
 
-        public string IsVisibilityTargetSelectBox => IsCheckedAttackCommand ? "Visible" : "Collapsed";
+        /// <summary>
+        /// ターゲット選択ボックスを表示するかどうか
+        /// </summary>
+        /// Xamlのオブジェクトの表示非表示を制御するVisibilityプロパティは列挙型であるため
+        /// 文字列で"Visible"と書くよりSystem.Window.Visibility.value.ToString()のように
+        /// コードで補った方がタイプミスを防ぐことができ、バグ防止に役立てることができる
+        public string IsVisibilityTargetSelectBox => IsCheckedAttackCommand ? Visibility.Visible.ToString() : Visibility.Collapsed.ToString();
 
         /// <summary>
         /// 敵キャラのリスト
         /// </summary>
-        public ObservableCollection<Enemy> Enemies
-        {
-            get => _enemies;
-            private set => _enemies = value;
-        }
-        private ObservableCollection<Enemy> _enemies = new ObservableCollection<Enemy>();
+        public ObservableCollection<Enemy> Enemies { get; set; } = new ObservableCollection<Enemy>();
 
+        /// <summary>
+        /// 選択された敵キャラ
+        /// </summary>
+        /// 攻撃対象にされてしまった敵キャラ
         public Enemy SelectedEnemy { get; set; }
 
         #endregion
 
+        /// <summary>
+        /// <see cref="MainWindowVm"/>コンストラクタ
+        /// </summary>
+        /// ウィンドウが立上がった一番最初に実行されるメソッド
+        /// 主にオブジェクトの生成やパラメータの初期化などを行う
         public MainWindowVm()
         {
             Enemies.Add(new Enemy());
@@ -55,7 +64,7 @@ namespace RPG
         }
 
 
-        #region AttackCommand
+        #region AttackCommand　攻撃コマンド
 
         public DelegateCommand AttackCommand =>
                     _AttackCommand ?? (_AttackCommand = new DelegateCommand(ExecuteAttack));
@@ -74,7 +83,7 @@ namespace RPG
     /// <summary>
     /// 主人公クラス
     /// </summary>
-    public class Player : NotifyValidatableObject
+    public class Player : BindableBase
     {
         #region パラメーター
 
@@ -95,18 +104,14 @@ namespace RPG
     /// <summary>
     /// 敵クラス
     /// </summary>
-    public class Enemy : NotifyValidatableObject
+    public class Enemy : BindableBase
     {
         #region 敵キャラの各パラメーター
 
         public int Hp
         {
             get => _hp;
-            set
-            {
-                _hp = value;
-                NotifyPropertyChanged(nameof(Hp));
-            }
+            set => SetProperty(ref _hp, value);  // SetProperty()を用いることで自動的に通知してくれるようになる
         }
         private int _hp;
 
