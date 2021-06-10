@@ -12,13 +12,16 @@ using Reactive.Bindings;
 using Prism.Commands;
 using Prism.Mvvm;
 using System.ComponentModel;
+using System.Data;
+using System.Threading;
+using System.Windows.Data;
 
 namespace RPG
 {
     public class MainWindowVm : BindableBase
     {
         #region プロパティ
-        
+
         /// <summary>
         /// 攻撃コマンドが選択されているか
         /// </summary>
@@ -59,8 +62,19 @@ namespace RPG
         /// 主にオブジェクトの生成やパラメータの初期化などを行う
         public MainWindowVm()
         {
+            BindingOperations.EnableCollectionSynchronization(Enemies, new object());
+
             Enemies.Add(new Enemy());
             Enemies.Add(new Enemy());
+
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    Thread.Sleep(1000);
+                    Enemies.Add(new Enemy());
+                }
+            });
         }
 
 
@@ -73,11 +87,10 @@ namespace RPG
         void ExecuteAttack()
         {
             SelectedEnemy.Hp -= 10;
+            if (SelectedEnemy.Hp <= 0) Enemies.Remove(SelectedEnemy);
         }
 
         #endregion
-
-
     }
 
     /// <summary>
@@ -148,11 +161,14 @@ namespace RPG
         /// new演算子によってインスタンスが生成された時に自動的に実行されるメソッド。
         public Enemy()
         {
-            // 色と形をランダムに決定する
-            EnemyColor = _colorOption[new Random().Next(0, _colorOption.Length - 1)].ToString();
-            EnemyShape = _shapeOption[new Random().Next(0, _shapeOption.Length - 1)];
+            Random r = new Random(DateTime.Now.Millisecond + DateTime.Now.Second);
+            Thread.Sleep(10);
 
-            Hp = 100;
+            // 色と形をランダムに決定する
+            EnemyColor = _colorOption[r.Next(0, _colorOption.Length - 1)].ToString();
+            EnemyShape = _shapeOption[r.Next(0, _shapeOption.Length - 1)];
+
+            Hp = r.Next(80, 120);
         }
     }
 }
