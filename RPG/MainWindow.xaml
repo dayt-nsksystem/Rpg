@@ -31,9 +31,9 @@
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="HP" Style="{StaticResource MaterialDesignSubtitle2TextBlock}" />
-                            <TextBlock Text="180 / 200" Margin="10 0" Style="{StaticResource MaterialDesignBody2TextBlock}" />
+                            <TextBlock Text="{Binding Player1.HpDisplayValue}" Margin="10 0" Style="{StaticResource MaterialDesignBody2TextBlock}" />
                         </StackPanel>
-                        <ProgressBar Height="15" Value="180" Maximum="200" Foreground="Green" Background="Transparent" BorderBrush="Black" />
+                        <ProgressBar Height="15" Value="{Binding Player1.Hp}" Maximum="{Binding Player1.HpMax}" Foreground="Green" Background="Transparent" BorderBrush="Black" />
                         <TextBlock Text="" />
                         <TextBlock Text="EXP" Style="{StaticResource MaterialDesignSubtitle2TextBlock}" />
                     </StackPanel>

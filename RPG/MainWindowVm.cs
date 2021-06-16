@@ -53,6 +53,11 @@ namespace RPG
         /// 攻撃対象にされてしまった敵キャラ
         public Enemy SelectedEnemy { get; set; }
 
+        /// <summary>
+        /// プレイヤーのインスタンス
+        /// </summary>
+        public Player Player1 { get; set; } = new Player();
+
         #endregion
 
         /// <summary>
@@ -71,7 +76,7 @@ namespace RPG
             {
                 while (true)
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(10000);
                     Enemies.Add(new Enemy());
                 }
             });
@@ -103,7 +108,17 @@ namespace RPG
         /// <summary>
         /// ヒットポイント
         /// </summary>
-        public int Hp { get; set; }
+        public int Hp { get; set; } = 160;
+
+        /// <summary>
+        /// Hp Max
+        /// </summary>
+        public int HpMax { get; set; } = 200;
+
+        /// <summary>
+        /// HP表示用
+        /// </summary>
+        public string HpDisplayValue => $"{Hp} / {HpMax}";
 
         /// <summary>
         /// 経験値
